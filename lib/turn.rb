@@ -31,14 +31,14 @@ class Turn
   end
 
   def max_point_role_of(candidate_roles)
-    ROLE_TABLE.select { |key, value| key.chars.tally == candidate_roles.first[0] }
+    ROLE_TABLE.select { |key, value| key.chars.tally == candidate_roles.first }
   end
 
-  def tallied_roles = ROLE_TABLE.map { |key, value| [key.chars.tally, value] }
+  def tallied_roles = ROLE_TABLE.map { |key, value| key.chars.tally }
 
   def appear?(tallied_role)
     # resultsをすべて負に変換してから足し合わせるので、正の数が出現するのは、役に対して文字が足りない（つまり役が成立しない）時
-    tallied_role[0].merge(negative_value_results) { |key, role_value, results_value| role_value + results_value }
+    tallied_role.merge(negative_value_results) { |key, role_value, results_value| role_value + results_value }
                    .none? { |key, value| value.positive? }
   end
 
