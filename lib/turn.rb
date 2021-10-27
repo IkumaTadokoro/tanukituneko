@@ -42,7 +42,7 @@ class Turn
   def appear?(tallied_role)
     # resultsをすべて負に変換してから足し合わせるので、正の数が出現するのは、役に対して文字が足りない（つまり役が成立しない）時
     tallied_role.merge(negative_value_results) { |key, role_value, results_value| role_value + results_value }
-                   .none? { |key, value| value.positive? }
+                .none? { |key, value| value.positive? }
   end
 
   def negative_value_results = @results.tally.transform_values { |value| value * -1 }
