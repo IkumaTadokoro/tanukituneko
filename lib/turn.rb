@@ -18,7 +18,7 @@ class Turn
   def initialize
     @results = Array.new(6).map { |_n| Dice.new.roll }
     @role = judge_role.keys.join
-    @point = judge_role.values.join.to_i
+    @point = ROLE_TABLE[@role] || 0
   end
 
   def score = "（出た目）#{@results.join} (成立した役) #{@role} （点数） #{@point}"
