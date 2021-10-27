@@ -1,6 +1,7 @@
 require_relative 'dice'
 
 class Turn
+  # TODO:ハッシュだと拡張性に乏しいので、これ自体をクラスにした方が良さそう
   ROLE_TABLE = {
     'たぬきつねこ' => 1000,
     'きたきつね' => 800,
@@ -11,14 +12,16 @@ class Turn
     'きつね' => 200,
     'ぬこ' => 150,
     'ねこ' => 100
-  }.freeze
+  }
+
+  ROLE_TABLE.default = 0
 
   attr_reader :point
 
   def initialize
     @results = Array.new(6).map { |_n| Dice.new.roll }
-    @role = judge_role.keys.join
-    @point = ROLE_TABLE[@role] || 0
+    @role = judge_role
+    @point = ROLE_TABLE[@role]
   end
 
   def score = "（出た目）#{@results.join} (成立した役) #{@role} （点数） #{@point}"
@@ -27,11 +30,11 @@ class Turn
 
   def judge_role
     candidate_roles = tallied_roles.select(&method(:appear?))
-    candidate_roles.empty? ? { '' => 0 } : max_point_role_of(candidate_roles)
+    max_point_role_of(candidate_roles)
   end
 
   def max_point_role_of(candidate_roles)
-    ROLE_TABLE.select { |key, value| key.chars.tally == candidate_roles.first }
+    ROLE_TABLE.select { |key, value| key.chars.tally == candidate_roles.first }.keys.join
   end
 
   def tallied_roles = ROLE_TABLE.map { |key, value| key.chars.tally }
